@@ -10,7 +10,11 @@ endif()
 
 set (CMAKE_CXX_STANDARD 14)
 
-add_compile_options(-Wall -Werror -Wno-sign-compare -Wno-unused-variable) #-Wno-maybe-uninitialized -Wno-unused-but-set-variable)
+add_compile_options(-Wall -Werror -Wno-sign-compare -Wno-unused-variable)
+
+if (NOT CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wno-maybe-uninitialized -Wno-unused-but-set-variable)
+endif()
 
 find_package (Eigen3 REQUIRED NO_MODULE)
 include_directories("RansacLib")
