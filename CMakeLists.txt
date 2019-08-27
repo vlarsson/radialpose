@@ -10,7 +10,7 @@ endif()
 
 set (CMAKE_CXX_STANDARD 14)
 
-add_compile_options(-Wall -Werror -Wno-maybe-uninitialized -Wno-sign-compare -Wno-unused-variable -Wno-unused-but-set-variable)
+add_compile_options(-Wall -Werror -Wno-sign-compare -Wno-unused-variable) #-Wno-maybe-uninitialized -Wno-unused-but-set-variable)
 
 find_package (Eigen3 REQUIRED NO_MODULE)
 include_directories("RansacLib")

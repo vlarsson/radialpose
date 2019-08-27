@@ -62,7 +62,7 @@ int radialpose::larsson_iccv19::Solver<1, 0, false>::solver_impl(const Points2D&
 		Eigen::GeneralizedEigenSolver<Eigen::Matrix<double, 2, 2>> es(A0, AA, false);
 		es.setMaxIterations(1000);
 
-		if (!es.info() == Eigen::ComputationInfo::Success) {
+		if (es.info() != Eigen::ComputationInfo::Success) {
 			// Make sure EigenSolver converged
 			return 0;
 		}
@@ -420,7 +420,7 @@ int radialpose::larsson_iccv19::Solver<1, 0, true>::solver_impl(const Points2D& 
 		Eigen::GeneralizedEigenSolver<Eigen::Matrix<double, 5, 5>> es(A, B, false);
 		es.setMaxIterations(1000);
 
-		if (!es.info() == Eigen::ComputationInfo::Success) {
+		if (es.info() != Eigen::ComputationInfo::Success) {
 			// Make sure EigenSolver converged
 			return 0;
 		}
@@ -535,7 +535,7 @@ int radialpose::larsson_iccv19::Solver<2, 0, true>::solver_impl(const Points2D& 
 		Eigen::GeneralizedEigenSolver<Eigen::Matrix<double, 11, 11>> es(A, B, false);
 		es.setMaxIterations(1000);
 
-		if (!es.info() == Eigen::ComputationInfo::Success) {
+		if (es.info() != Eigen::ComputationInfo::Success) {
 			// Make sure EigenSolver converged
 			return 0;
 		}
@@ -706,7 +706,7 @@ int radialpose::larsson_iccv19::Solver<3, 0, true>::solver_impl(const Points2D& 
 		Eigen::GeneralizedEigenSolver<Eigen::Matrix<double, 19, 19>> es(A, B, false);
 		es.setMaxIterations(1000);
 
-		if (!es.info() == Eigen::ComputationInfo::Success) {
+		if (es.info() != Eigen::ComputationInfo::Success) {
 			// Make sure EigenSolver converged
 			return 0;
 		}
@@ -724,7 +724,7 @@ int radialpose::larsson_iccv19::Solver<3, 0, true>::solver_impl(const Points2D& 
 
 		Eigen::EigenSolver<Eigen::Matrix<double, 19, 19>> es(B);
 
-		if (!es.info() == Eigen::ComputationInfo::Success) {
+		if (es.info() != Eigen::ComputationInfo::Success) {
 			// Make sure EigenSolver converged
 			return 0;
 		}
@@ -1045,7 +1045,7 @@ int radialpose::larsson_iccv19::Solver<3, 3, true>::solver_impl(const Points2D& 
 		Eigen::GeneralizedEigenSolver<Eigen::Matrix<double, 28, 28>> es(A, B, false);
 		es.setMaxIterations(1000);
 
-		if (!es.info() == Eigen::ComputationInfo::Success) {
+		if (es.info() != Eigen::ComputationInfo::Success) {
 			// Make sure EigenSolver converged
 			return 0;
 		}
@@ -1063,7 +1063,7 @@ int radialpose::larsson_iccv19::Solver<3, 3, true>::solver_impl(const Points2D& 
 
 		Eigen::EigenSolver<Eigen::Matrix<double, 28, 28>> es(B);
 
-		if (!es.info() == Eigen::ComputationInfo::Success) {
+		if (es.info() != Eigen::ComputationInfo::Success) {
 			// Make sure EigenSolver converged
 			return 0;
 		}
