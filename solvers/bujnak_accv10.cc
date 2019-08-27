@@ -168,20 +168,18 @@ int radialpose::bujnak_accv10::NonPlanarSolver::solve(Points2D& x, Points3D& X, 
 	AM.row(15) = -C12.row(110);
 
 	// Solve eigenvalue problem
-	Eigen::EigenSolver<Eigen::Matrix<double, 16, 16> > es(AM);
-	auto D = es.eigenvalues();
-	auto V = es.eigenvectors().array();
-	//V.rowwise() /= V.row(0).array();
-	auto scale = V.row(0);
-	V = (V.rowwise() / scale).eval();
-	
+	Eigen::EigenSolver<Eigen::Matrix<double, 16, 16> > es(AM, true);
+	Eigen::Array<std::complex<double>, 16, 1> D = es.eigenvalues();
+	Eigen::Array<std::complex<double>, 16, 16> V = es.eigenvectors().array();
+	Eigen::Array<std::complex<double>, 1, 16> scale = V.row(0);		
+		
 	// Extract solutions from eigenvectors/values
 	Eigen::Matrix<std::complex<double>, 4, 16> sols;
 	sols.setZero();
-	sols.row(0) = V.row(4).array();
-	sols.row(1) = V.row(3).array();
-	sols.row(2) = V.row(2).array();
-	sols.row(3) = V.row(1).array();
+	sols.row(0).array() = V.row(4).array() / scale;
+	sols.row(1).array() = V.row(3).array() / scale;
+	sols.row(2).array() = V.row(2).array() / scale;
+	sols.row(3).array() = V.row(1).array() / scale;
 
 	// Compute poses from solutions
 	for (int i = 0; i < 16; ++i) {

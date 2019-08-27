@@ -341,6 +341,7 @@ int radialpose::larsson_iccv17::NonPlanarSolver::solve(const Points2D &x, const 
 	for (int i = 0; i < 351; i++) { C0(C0_ind[i]) = coeffs[coeffs0_ind[i]]; }
 	for (int i = 0; i < 159; i++) { C1(C1_ind[i]) = coeffs[coeffs1_ind[i]]; }
 	Eigen::Matrix<double, 28, 12> C12 = C0.partialPivLu().solve(C1);
+	
 
 	// Setup action matrix
 	Eigen::Matrix<double, 19, 12> RR;
@@ -349,23 +350,21 @@ int radialpose::larsson_iccv17::NonPlanarSolver::solve(const Points2D &x, const 
 	for (int i = 0; i < 12; i++) {
 		AM.row(i) = RR.row(AM_ind[i]);
 	}
-	
+
 
 	// Solve eigenvalue problem
-	Eigen::EigenSolver<Eigen::Matrix<double, 12, 12> > es(AM);
-	auto D = es.eigenvalues();
-	auto V = es.eigenvectors().array();
-	Eigen::Array<std::complex<double>, 1, 12> scale = V.row(11);
-	V.rowwise() /= scale;
-	//V = V / V.row(11).array().replicate(12, 1);
+	Eigen::EigenSolver<Eigen::Matrix<double, 12, 12> > es(AM, true);
+	Eigen::Array<std::complex<double>, 12, 1> D = es.eigenvalues();
+	Eigen::Array<std::complex<double>, 12, 12> V = es.eigenvectors().array();
+	Eigen::Array<std::complex<double>, 1, 12> scale = V.row(11);	
 	
 	// Extract solutions from eigenvectors/values
 	Eigen::Matrix<std::complex<double>, 4, 12> sols;
 	sols.setZero();
-	sols.row(0) = V.row(7).array();
-	sols.row(1) = D.transpose().array();
-	sols.row(2) = V.row(9).array();
-	sols.row(3) = V.row(10).array();
+	sols.row(0).array() = V.row(7).array() / scale;
+	sols.row(1).array() = D.transpose().array();
+	sols.row(2).array() = V.row(9).array() / scale;
+	sols.row(3).array() = V.row(10).array() / scale;
 
 	// Compute poses from solutions
 	for (int i = 0; i < 12; ++i) {
