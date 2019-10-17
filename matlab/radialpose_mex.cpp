@@ -97,91 +97,96 @@ void mexFunction(int nlhs,mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
 	Eigen::Matrix<double, 2, Eigen::Dynamic> x = Eigen::Map<Eigen::Matrix<double, 2, Eigen::Dynamic>>(mxGetPr(prhs[0]), 2, mxGetN(prhs[0]));
 	Eigen::Matrix<double, 3, Eigen::Dynamic> X = Eigen::Map<Eigen::Matrix<double, 3, Eigen::Dynamic>>(mxGetPr(prhs[1]), 3, mxGetN(prhs[1]));
 
+	if(x.cols() > 8) {
+		// This is to avoid crash when solver is called with more than 8 points
+		x = x.block(0,0,2,8).eval();
+		X = X.block(0,0,3,8).eval();
+	}
+
 	int solver_idx = static_cast<int>(mxGetScalar(prhs[2]));
+
+	std::vector<radialpose::Camera> poses;
 
 	if (solver_idx == 1) { // D(1,0)
 		radialpose::larsson_iccv19::Solver<1, 0, true> estimator;
 		estimator.use_radial_solver = use_radial_solver;
 		estimator.center_world_coord = center_world_coordinates;
 		estimator.damp_factor = damp_factor;
-		estimator.estimate(x, X);
-		save_poses(nlhs, plhs, estimator.poses);
+		estimator.estimate(x, X, &poses);
+		save_poses(nlhs, plhs, poses);
 
 	} else if (solver_idx == 2) { // D(2,0)
 		radialpose::larsson_iccv19::Solver<2, 0, true> estimator;
 		estimator.use_radial_solver = use_radial_solver;
 		estimator.center_world_coord = center_world_coordinates;
 		estimator.damp_factor = damp_factor;
-		estimator.estimate(x, X);
-		save_poses(nlhs, plhs, estimator.poses);
+		estimator.estimate(x, X, &poses);
+		save_poses(nlhs, plhs, poses);
 
 	} else if (solver_idx == 3) { // D(3,0)
 		radialpose::larsson_iccv19::Solver<3, 0, true> estimator;
 		estimator.use_radial_solver = use_radial_solver;
 		estimator.center_world_coord = center_world_coordinates;
 		estimator.damp_factor = damp_factor;
-		estimator.estimate(x, X);
-		save_poses(nlhs, plhs, estimator.poses);
+		estimator.estimate(x, X, &poses);
+		save_poses(nlhs, plhs, poses);
 
 	} else if (solver_idx == 4) { // D(3,3)
 		radialpose::larsson_iccv19::Solver<3, 3, true> estimator;
 		estimator.use_radial_solver = use_radial_solver;
 		estimator.center_world_coord = center_world_coordinates;
 		estimator.damp_factor = damp_factor;		
-		estimator.estimate(x, X);
-		save_poses(nlhs, plhs, estimator.poses);
+		estimator.estimate(x, X, &poses);
+		save_poses(nlhs, plhs, poses);
 
 	} else if (solver_idx == 5) { // U(1,0)
 		radialpose::larsson_iccv19::Solver<1, 0, false> estimator;
 		estimator.use_radial_solver = use_radial_solver;
 		estimator.center_world_coord = center_world_coordinates;
 		estimator.damp_factor = damp_factor;
-		estimator.estimate(x, X);
-		save_poses(nlhs, plhs, estimator.poses);
+		estimator.estimate(x, X, &poses);
+		save_poses(nlhs, plhs, poses);
 
 	} else if (solver_idx == 6) { // U(0,1)
 		radialpose::larsson_iccv17::NonPlanarSolver estimator;
-		estimator.estimate(x, X);
-		save_poses(nlhs, plhs, estimator.poses);
+		estimator.estimate(x, X, &poses);
+		save_poses(nlhs, plhs, poses);
 
 	} else if (solver_idx == 7) {  // U(0,1)
 		radialpose::bujnak_accv10::NonPlanarSolver estimator;
-		estimator.estimate(x, X);
-		save_poses(nlhs, plhs, estimator.poses);
+		estimator.estimate(x, X, &poses);
+		save_poses(nlhs, plhs, poses);
 
 	} else if (solver_idx == 8) {  // U(0,1)
 		radialpose::kukelova_iccv13::Solver estimator(1);
 		estimator.use_radial_solver = use_radial_solver;
 		estimator.center_world_coord = center_world_coordinates;
-	//  estimator.damp_factor = damp_factor;
-		estimator.estimate(x, X);
-		save_poses(nlhs, plhs, estimator.poses);
+		estimator.estimate(x, X, &poses);
+		save_poses(nlhs, plhs, poses);
 
 	} else if (solver_idx == 9) {  // U(0,2)
 		radialpose::kukelova_iccv13::Solver estimator(2);
 		estimator.use_radial_solver = use_radial_solver;
 		estimator.center_world_coord = center_world_coordinates;
-//		estimator.damp_factor = damp_factor;
-		estimator.estimate(x, X);
-		save_poses(nlhs, plhs, estimator.poses);
+		estimator.estimate(x, X, &poses);
+		save_poses(nlhs, plhs, poses);
 
 	} else if (solver_idx == 10) { // U(0,3)
 		radialpose::kukelova_iccv13::Solver estimator(3);
 		estimator.use_radial_solver = use_radial_solver;
 		estimator.center_world_coord = center_world_coordinates;
-//		estimator.damp_factor = damp_factor; // NYI
-		estimator.estimate(x, X);
-		save_poses(nlhs, plhs, estimator.poses);
+		estimator.estimate(x, X, &poses);
+		save_poses(nlhs, plhs, poses);
 
 	} else if (solver_idx == 11) {  // U(0,1)
 		radialpose::oskarsson_arxiv18::PlanarSolver estimator;
-		estimator.estimate(x, X);
-		save_poses(nlhs, plhs, estimator.poses);
+		estimator.estimate(x, X, &poses);
+		save_poses(nlhs, plhs, poses);
 
 	} else if (solver_idx == 12) {  // N/A
 		radialpose::kukelova_iccv13::Radial1DSolver estimator;
-		estimator.estimate(x, X);
-		save_poses(nlhs, plhs, estimator.poses);
+		estimator.estimate(x, X, &poses);
+		save_poses(nlhs, plhs, poses);
 
 	} else {
 		print_usage();

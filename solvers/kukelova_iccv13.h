@@ -50,7 +50,7 @@ namespace radialpose {
 				return 5;
 			}
 
-			inline void distort(std::vector<double>& dist_params, Eigen::Matrix<double, 2, Eigen::Dynamic> xu, Eigen::Matrix<double, 2, Eigen::Dynamic>* xd) const {
+			inline void distort(const std::vector<double>& dist_params, const Eigen::Matrix<double, 2, Eigen::Dynamic> xu, Eigen::Matrix<double, 2, Eigen::Dynamic>* xd) const {
 				*xd = xu; // No distortion model
 			}
 

@@ -8,7 +8,8 @@
 static const double TOL_POSE = 1.0e-6;
 
 // Passing tests return true.
-#define TEST(FUNC) if(!FUNC()) { std::cout << #FUNC" FAILED!\n"; } else { std::cout << #FUNC" PASSED!\n"; passed++;} num_tests++; 
+#define TEST(FUNC) if(!FUNC()) { std::cout << #FUNC"\033[1m\033[31m FAILED!\033[0m\n"; } else { std::cout << #FUNC"\033[1m\033[32m PASSED!\033[0m\n"; passed++;} num_tests++; 
+
 
 using namespace Eigen;
 using namespace radialpose;
