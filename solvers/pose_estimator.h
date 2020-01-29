@@ -57,7 +57,7 @@ int radialpose::PoseEstimator<Solver>::estimate(const Points2D &image_points, co
 	double s0 = 1.0;
 
 	if (center_world_coord) {
-		t0 = -X.rowwise().mean();
+		t0 = X.rowwise().mean();
 		X.colwise() -= t0;
 	}
 	if(normalize_world_coord) {

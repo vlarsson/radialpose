@@ -19,7 +19,7 @@ using namespace std;
 double pose_distance(Camera ref, Camera pose, bool compare_focal = true, bool compare_distortion = true) {
 
 	double dist_R = (ref.R - pose.R).norm();
-	double dist_t = (ref.t - pose.t).norm() / ref.t.norm();
+	double dist_t = (ref.t - pose.t).norm();
 	double dist_f = std::abs(ref.focal - pose.focal) / std::abs(ref.focal);
 	double dist_d = 0.0;
 
